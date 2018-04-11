@@ -27,18 +27,18 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,client) =>{
     // });
 
 
-//     db.collection('Users').insertOne({
+    db.collection('Users').insertOne({
        
-//         name:'Hitesh',
-//         age: 26,
-//         location: 'bangalore'
-//      },(err,result) => {
-//          if(err){
-//              return console.log('Unable to insert todo',err);
-//          }
+        name:'Hitesh',
+        age: 26,
+        location: 'bangalore'
+     },(err,result) => {
+         if(err){
+             return console.log('Unable to insert todo',err);
+         }
       
-//          console.log(result.ops[0]._id.getTimestamp());
-//      });
+         console.log(result.ops[0]._id.getTimestamp());
+     });
  
 //     client.close();
 
