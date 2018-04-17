@@ -4,6 +4,7 @@ var bodyparser = require('body-parser');  //good practice to make space between 
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user'); 
+const {ObjectID } = require('mongodb');
 
 var app =express();
   
@@ -28,6 +29,27 @@ app.get('/todos', (re,res) => {
     }, (e) => {
       res.status(400).send(e);
     })
+});
+
+//GET /todos/123454
+app.get('/todos/:id',(req,res) =>{
+    var id =req.params.id;
+
+    if(!ObjectID.isValid(id)){
+   // console.log('ID not valid');
+   return res.status(400).send();  //return with empty body
+}
+
+Todo.findById(id).then((todo) =>{
+    if(!todo){
+        return res.status(404).send();
+    }
+
+    res.send({todo});
+}).catch((e) =>{
+    res.send(400).send();
+});
+   
 });
 
 
