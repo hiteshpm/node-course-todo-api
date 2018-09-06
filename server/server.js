@@ -5,6 +5,7 @@ var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user'); 
 const {ObjectID } = require('mongodb');
+var _ = require('lodash');
 
 var app =express();
 const port = process.env.PORT || 3000;
@@ -74,6 +75,20 @@ app.delete('/todos:id',(req,res) => {
 });
 });
 
+//sign up the users POST /users
+app.post('/users', (req,res) =>{
+ var body= _.pick(req.body, ['email','password']);
+ var user =new User(body);
+
+ user.save().then(() =>{
+     //res.send(user);
+    return user.generateAuthToken(); //it does not take any argument so we can call with any
+ }).then ( (token) =>{
+     res.header('x-auth',token).send(user);
+ }).catch((e) =>{
+     res.status(400).send(e);
+ })
+});
 app.listen(port,() => {
    console.log(`Started up at port ${port}`);
 });
