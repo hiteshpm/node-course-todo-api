@@ -4,6 +4,7 @@ var bodyparser = require('body-parser');  //good practice to make space between 
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user'); 
+var {authenticate} = require('./middleware/authenticate');
 const {ObjectID } = require('mongodb');
 var _ = require('lodash');
 
@@ -75,7 +76,7 @@ app.delete('/todos:id',(req,res) => {
 });
 });
 
-//sign up the users POST /users
+//sign up the users POST /users using auth token
 app.post('/users', (req,res) =>{
  var body= _.pick(req.body, ['email','password']);
  var user =new User(body);
@@ -89,6 +90,16 @@ app.post('/users', (req,res) =>{
      res.status(400).send(e);
  })
 });
+
+
+//get user using auth token. added middleware and made private route
+
+app.get('/users/me',authenticate, (req,res) => {
+     res.send(req.user);
+});
+
+
+
 app.listen(port,() => {
    console.log(`Started up at port ${port}`);
 });
